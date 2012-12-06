@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <style>
+    * {
+      cursor: none;
+    }
+    body, html, canvas {
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    body {
+      background-image: url('background.jpg');
+    }
+    button {
+      font-size: 40px;
+      padding: 30px;
+      margin-top: 200px;
+    }
+    .twitter-share-button, .fb-like {
+      z-index: 10000;
+      position: absolute;
+    }
+    .twitter-share-button {
+      top: 15px;
+      left: 10px;
+    }
+    .fb-like {
+      top: 15px;
+      left: 100px;
+    }
+  </style>
+</head>
+<body>
+  <!-- <button>Click to start the madness!</button> -->
+  <a href="https://twitter.com/share" class="twitter-share-button" data-via="FreeTheFeross" data-related="FreeTheFeross">Tweet</a>
+  <div id="fb-root"></div>
+
+  <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"></script>
+<script>
+
+  // var elementPrototype = (window.HTMLElement || window.Element)["prototype"];
+  // function requestFullScreen() {
+  //   if (elementPrototype.requestFullscreen) {
+  //     document.documentElement.requestFullscreen();
+  //   } else if (elementPrototype.webkitRequestFullScreen) {
+  //     document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+  //   } else if (elementPrototype.mozRequestFullScreen) {
+  //     document.documentElement.mozRequestFullScreen();
+  //   } else {
+  //     /* fail silently */
+  //   }
+  // }
+
+  // $('button').on('click', function(e) {
+    // requestFullScreen();
+  $(function() {
+    $('button').remove();
+
+    var width = $(window).width();
+    var height = $(window).height();
+
+    $('body').append('<canvas id="canvas" width="' + width + '" height="' + height + '"></canvas>');
+
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext("2d");
+
+    var img = new Image();
+    img.src = 'error.gif';
+    img.onload = function() {
+      canvas.addEventListener('mousemove', function(event) {
+        ctx.drawImage(img, event.clientX, event.clientY);
+      }, false);
+    }
+
+    setInterval(function() {
+      ctx.drawImage(img, _.random(width), _.random(height));
+    }, 500);
+
+  // });
+  });
+
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "http://connect.facebook.net/en_US/all.js#xfbml=1&appId=515587071790188";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</html>
