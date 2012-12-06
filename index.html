@@ -1,9 +1,10 @@
 <!doctype html>
 <html>
 <head>
+  <meta property="og:image" content="error.gif">
   <style>
-    * {
-      cursor: none;
+    *, html, body, canvas {
+      /*cursor: none;*/
     }
     body, html, canvas {
       margin: 0;
@@ -17,26 +18,31 @@
     html {
       overflow: hidden;
     }
-    button {
-      font-size: 40px;
-      padding: 30px;
-      margin-top: 200px;
+    a {
+      z-index: 10000 !important;
+      position: fixed !important;
+      bottom: 15px;
+      right: 10px;
+      color: red;
     }
     .twitter-share-button, .fb-like {
       z-index: 10000 !important;
       position: fixed !important;
     }
     .twitter-share-button {
-      top: 15px;
+      bottom: 15px;
       left: 10px;
     }
     .fb-like {
-      top: 15px !important;
+      bottom: 15px !important;
       left: 100px !important;
     }
   </style>
+  <title>Windows XP: So many good memories...</title>
 </head>
 <body>
+  <a class="dont" href="#">Don't click</a>
+
   <a href="https://twitter.com/share" class="twitter-share-button" data-via="FreeTheFeross" data-related="FreeTheFeross">Tweet</a>
   <div id="fb-root"></div>
 
@@ -49,26 +55,74 @@
 <script src="js/soundmanager2-nodebug-jsmin.js"></script>
 <script>
 
+  function playStartupSound() {
+    if (soundManagerLoaded) {
+      soundManager
+        .createSound({
+          id: 'startup',
+          url:'sound/startup.mp3'
+        })
+        .play({
+          onfinish: function() {
+              this.destruct();
+          }
+      });
+    }
+  }
+
+  function playErrorSound() {
+    if (soundManagerLoaded) {
+      soundManager
+        .createSound({
+          id: 'error' + _.uniqueId(),
+          url:'sound/error.mp3'
+        })
+        .play({
+          onfinish: function() {
+              this.destruct();
+          }
+      });
+    }
+  }
+
   soundManager.url = 'swf/';
   soundManager.flashVersion = 8;
   var soundManagerLoaded = false;
   soundManager.onload = function() {
       soundManagerLoaded = true;
+      playStartupSound();
   };
 
-  function playSound() {
-    console.log(soundManagerLoaded);
-    if (soundManagerLoaded) {
-      soundManager
-        .createSound({
-            id: 'sound',
-            url:'startup.wav'
-        })
-        .play({
-            onfinish: function() {
-                this.destruct();
-            }
-        });
+  $('a.dont').on('click', function(e) {
+    myWindow1=window.open('','','width=200,height=100');
+    myWindow1.document.write("<h1>HAHA!</h1>");
+    shake(myWindow1, 5);
+
+    e.preventDefault();
+  });
+
+  function shake(win, n) {
+    if (win.moveBy) {
+      for (i = 10; i > 0; i--) {
+        for (j = n; j > 0; j--) {
+          win.moveBy(-i,0);
+          win.moveBy(0,-i);
+          win.moveBy(-i,0);
+          win.moveBy(0,i);
+          win.moveBy(i,0);
+          win.moveBy(0,-i);
+          win.moveBy(-i,0);
+          win.moveBy(0,i);
+          win.moveBy(i,0);
+          win.moveBy(0,-i);
+          win.moveBy(-i,0);
+          win.moveBy(0,-i);
+          win.moveBy(i,0);
+          win.moveBy(0,i);
+          win.moveBy(i,0);
+          win.moveBy(0,i);
+        }
+      }
     }
   }
 
@@ -88,16 +142,33 @@
     img.onload = function() {
       canvas.addEventListener('mousemove', function(event) {
         ctx.drawImage(img, event.clientX, event.clientY);
-        // playSound();
+        playErrorSound();
       }, false);
     }
 
-    setInterval(function() {
+    randError = function() {
       ctx.drawImage(img, _.random(width), _.random(height));
-      playSound();
-    }, 500);
+      playErrorSound();
+      setTimeout(randError, _.random(400, 800));
+    }
 
-  // });
+    setTimeout(function() {
+      setTimeout(randError, _.random(400, 800));
+    }, 3000);
+
+
+    window.onbeforeunload = function (e) {
+      var message = "I want to make this page as annoying as possible.",
+      e = e || window.event;
+      // For IE and Firefox
+      if (e) {
+        e.returnValue = message;
+      }
+
+      // For Safari
+      return message;
+    };
+
   });
 
 </script>
